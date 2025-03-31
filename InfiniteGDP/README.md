@@ -51,7 +51,7 @@ julia> include("1DheatedStrip.jl")
 ```
 
 ## GDP Reformulation Comparison Study
-This is the source code for the comparison study . The entirety of this study is contained in `GDPreformulation.jl`.
+This is the source code for comparing GDP reformulation times before and after discretization. The entirety of this study is contained in `GDPreformulation.jl`.
 
 ### Running the code
 To configure the required packages, it is recommended to create a Julia environment using the `Project.toml` file. Creating the environment and running the case study can be done as follows:
