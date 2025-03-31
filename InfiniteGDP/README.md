@@ -11,24 +11,58 @@ julia> Pkg.add(url = "https://github.com/infiniteopt/InfiniteOpt.jl", rev = "mas
 julia> Pkg.add(url = "https://github.com/hdavid16/DisjunctiveProgramming.jl", rev = "infiniteopt_ext")
 ```
 
-## Running the code
-In order to run this code, you must ensure that the following Julia packages are locally installed and up-to-date on your computer:
-- `Plots`
+## Case Study 1: Tank Changeover Operation
+This is the source code for the tank changeover case study that features discrete-continuous decisions. The entirety of this case study is contained in `tankChangeover.jl`.
 
-These Julia packages can be added in the Julia terminal as follows:
+<img src="figures/optimal-tank.png" alt="Tank Changeover" width="75%">
+
+### Running the code
+To configure the required packages, it is recommended to create a Julia environment using the `Project.toml` file. Creating the environment and running the case study can be done as follows:
 ```julia
+julia> cd("[PATH_TO_FILES]/InfiniteGDP/")
+
 julia> ]
-pkg> add [package-name]
+
+(@v1.10) pkg> activate .
+
+(InfiniteGDP) pkg> instantiate
+
+julia> include("tankChangeover.jl")
 ```
 
-You will also need the Gurobi solver. The solver can be downloaded at https://www.gurobi.com/downloads/gurobi-software/.
-
-## Case Study 1: Tank Changeover Operation
-The entirety of this case study is contained in `tankChangeover.jl` and can be run as a standalone file.
-
 ## Case Study 2: 1D Temperature Control of a Heated Strip
-This case study is contained in two files: 
-- `1DheatedStrip.jl`, which demonstrates the use of infinite logical variables.
-- `InfiniteOpt-JuMP-timing.jl`, which reports the timing and memory usage results of reformulating an InfiniteOpt model and discretized JuMP model into an InfiniteGDP.
+This is the source code for the 1D heated strip case study which demonstrates the use of infinite logical variables. The entirety of this case study is contained in `1DheatedStrip.jl`.
 
-These files can each be run independently, depending on which results you're looking for.
+<img src="figures/optimal-strip.png" alt="1D heated strip" width="75%">
+
+
+### Running the code
+To configure the required packages, it is recommended to create a Julia environment using the `Project.toml` file. Creating the environment and running the case study can be done as follows:
+```julia
+julia> cd("[PATH_TO_FILES]/InfiniteGDP/")
+
+julia> ]
+
+(@v1.10) pkg> activate .
+
+(InfiniteGDP) pkg> instantiate
+
+julia> include("1DheatedStrip.jl")
+```
+
+## GDP Reformulation Comparison Study
+This is the source code for the comparison study . The entirety of this study is contained in `GDPreformulation.jl`.
+
+### Running the code
+To configure the required packages, it is recommended to create a Julia environment using the `Project.toml` file. Creating the environment and running the case study can be done as follows:
+```julia
+julia> cd("[PATH_TO_FILES]/InfiniteGDP/")
+
+julia> ]
+
+(@v1.10) pkg> activate .
+
+(InfiniteGDP) pkg> instantiate
+
+julia> include("GDPreformulation.jl")
+```
