@@ -9,38 +9,38 @@ julia> import Pkg
 julia> Pkg.add(url = "https://github.com/infiniteopt/InfiniteOpt.jl", rev = "master")
 ```
 
-## Running the code
-These case studies can be run using any of the two files below:
-- `run_cases_cpu.jl`, which runs CPU-based workflows `JuMP`, `MathOptSymbolicAD`, `AMPL`, `ExaModelsMOI.jl` and `InfiniteExaModels.jl` with `Ipopt.jl` as the solver
-- `run_cases_gpu.jl`, which runs GPU-based workflows `ExaModelsMOI.jl` and `InfiniteExaModels.jl` with `MadNLP.jl` as the solver
-
-When running the case studies, CSV files will be generated in a folder called "results". If this folder and/or CSV files from a previous run already exists, then those files will be overwritten by the latest run.
-
-In order to run the code, you must ensure that the following Julia packages are locally installed and up-to-date on your computer:
-- `Ipopt`
-- `AmplNLWriter`
-- `NLPModelsIpopt`
-- `ExaModels`
-- `DelimitedFiles`
-- `Ipopt_jll`
-- `HSL_jll`
-- `MadNLPGPU`
-- `CUDA`
-- `CUDSS`
-
-These Julia packages can be added in the Julia terminal as follows:
+### Running the code
+To configure the required packages, it is recommended to create a Julia environment using the `Project.toml` file. Creating the environment and running the case studies on CPU can be done as follows:
 ```julia
+julia> cd("[PATH_TO_FILES]/InfiniteGDP/")
+
 julia> ]
-pkg> add [package-name]
+
+(@v1.10) pkg> activate .
+
+(InfiniteGDP) pkg> instantiate
+
+julia> include("run_cases_cpu.jl")
 ```
 
-Please note that in order to run the GPU case studies with the `MadNLP.jl` solver, you will need a NVIDIA GPU that's compatible with CUDA.
+To run on GPU, you can do so via:
+```julia
+julia> cd("[PATH_TO_FILES]/InfiniteGDP/")
+
+julia> ]
+
+(@v1.10) pkg> activate .
+
+(InfiniteGDP) pkg> instantiate
+
+julia> include("run_cases_gpu.jl")
+```
 
 ## Case Study 1: Optimal Control of a Quadcopter
-The source code for this case study is contained in `quadrotor.jl` annd is run using one of the `run_cases` files.
+The source code for this case study is contained in `quadrotor.jl` and is run using one of the `run_cases` files.
 
 ## Case Study 2: 2D Temperature Control of a Heated Plate
-The source code for this case study is contained in `heatedPlate.jl` annd is run using one of the `run_cases` files.
+The source code for this case study is contained in `heatedPlate.jl` and is run using one of the `run_cases` files.
 
 ## Case Study 3: Stochastic Optimal Power Flow
 The source code for this case study is contained in `acopf.jl` and is run using one of the `run_cases` files.
