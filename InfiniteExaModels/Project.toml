@@ -1,3 +1,20 @@
+[compat]
+AmplNLWriter = "1.2.3"
+CUDA = "5.7.1"
+CUDSS = "0.4.3"
+DelimitedFiles = "1.9.1"
+Distributions = "0.25.118"
+Downloads = "1.6.0"
+ExaModels = "0.8.0"
+HSL_jll = "4.0.2"
+InfiniteOpt = "0.5.9"
+Ipopt = "1.8.0"
+Ipopt_jll = "300.1400.1700"
+MadNLPGPU = "0.7.7"
+MathOptSymbolicAD = "0.2.2"
+NLPModelsIpopt = "0.10.3"
+PowerModels = "0.21.3"
+
 [deps]
 AmplNLWriter = "7c4d4715-977e-5154-bfe0-e096adeac482"
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
