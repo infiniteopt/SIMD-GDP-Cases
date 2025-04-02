@@ -1,16 +1,18 @@
 using ExaModels, DelimitedFiles, MadNLPGPU, CUDA, CUDSS
 include("quadrotor.jl")
-include("opf.jl")
+include("acopf.jl")
 include("heatedPlate.jl")
 include("utils.jl")
 
 function madnlp_test(im, filename)
     set_optimizer_attribute(im, "output_file", joinpath(@__DIR__, "logs","$(filename)_madnlp.log"))
-    total_time = @elapsed optimize!(im)
+    stats = @timed optimize!(im)
+    total_time = stats.time
+    memory_use = stats.bytes / 1024^2   # convert to MB
     obj = objective_value(im)
     status = primal_status(im)
     nvar, ncon, sol_time, ad_time = madnlp_stats(joinpath(@__DIR__, "logs","$(filename)_madnlp.log"))
-    return nvar, ncon, obj, status, total_time, sol_time, ad_time
+    return nvar, ncon, obj, status, total_time, sol_time, ad_time, memory_use
 end
 
 function run_cases(im_func, kwarg_dict_list; prerun = true, backend = nothing)
@@ -44,12 +46,13 @@ function run_cases(im_func, kwarg_dict_list; prerun = true, backend = nothing)
     total_times = []
     sol_times = []
     ad_times = []
+    memory_uses = []
     for (backend_name, tbackend) in backend_dict
         for d in kwarg_dict_list
             im = im_func(; backend = tbackend, d...)
             filename = string(backend_name, "_", join([d[Symbol(k)] for k in kwarg_strs], "_"))
             output = madnlp_test(im, filename)
-            nvar, ncon, obj, status, total_time, sol_time, ad_time = output
+            nvar, ncon, obj, status, total_time, sol_time, ad_time, memory_use = output
             push!(backends, backend_name)
             push!(nvars, nvar)
             push!(ncons, ncon)
@@ -58,16 +61,17 @@ function run_cases(im_func, kwarg_dict_list; prerun = true, backend = nothing)
             push!(total_times, total_time)
             push!(sol_times, sol_time)
             push!(ad_times, ad_time)
+            push!(memory_uses, memory_use)
         end
     end
 
     # make a table to save the results to
     nrows = length(kwarg_dict_list) * length(backend_dict) + 1
-    ncols = length(first_kwargs) + 8
+    ncols = length(first_kwargs) + 9
     table = Matrix{String}(undef, nrows, ncols)
-    table[1, :] = append!(copy(kwarg_strs), ["framework", "nvar", "ncon", "objective", "status", "total_time", "solve_time", "ad_time"])
+    table[1, :] = append!(copy(kwarg_strs), ["framework", "nvar", "ncon", "objective", "status", "total_time", "solve_time", "ad_time", "memory_use"])
     kwarg_matrix = hcat([repeat([d[Symbol(k)] for d in kwarg_dict_list], length(backend_dict)) for k in kwarg_strs]...)
-    table[2:end, :] = string.(hcat(kwarg_matrix, backends, nvars, ncons, objs, statuses, total_times, sol_times, ad_times))
+    table[2:end, :] = string.(hcat(kwarg_matrix, backends, nvars, ncons, objs, statuses, total_times, sol_times, ad_times, memory_uses))
 
     # save the matrix as a CSV
     open("$(@__DIR__)/results/$(im_func)_madnlp_results.csv", "w") do io
@@ -75,7 +79,7 @@ function run_cases(im_func, kwarg_dict_list; prerun = true, backend = nothing)
     end
 end
 
-# Run the opf study
+# Run the ACOPF study
 num_supports_list = [2000, 4000, 8000, 16000]
 settings = [Dict(:num_supports => n) for n in num_supports_list]
 run_cases(opf, settings, backend = CUDABackend())
